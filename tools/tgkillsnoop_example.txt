@@ -1,0 +1,32 @@
+Demonstrations of tgkillsnoop, the Linux eBPF/bcc version.
+
+
+This traces signals sent via the tgkill() syscall. For example:
+
+# ./tgkillsnoop
+TIME      PID    COMM             SIG  TPID   RESULT
+17:16:08  4969   pthkill          15   4970   0
+17:16:15  4979   pthkill          15   4980   0
+
+The first line showed a SIGTERM (15) sent from PID 4969, 
+which calls pthread_kill(), to PID 4970. 
+The result, 0, means success.
+
+USAGE message:
+
+# ./tgkillsnoop -h
+usage: tgkillsnoop [-h] [-x] [-p PID]
+
+Trace signals issued by the tgkill() syscall
+This is useful for tracing pthread_kill()
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -x, --failed       only show failed tgkill syscalls
+  -p PID, --pid PID  trace this PID only
+
+examples:
+    ./tgkillsnoop           # trace all tgkill() signals
+    ./tgkillsnoop -x        # only show failed kills
+    ./tgkillsnoop -p 181    # only trace PID 181
+    ./tgkillsnoop -s 9      # only trace signal 9
